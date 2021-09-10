@@ -89,25 +89,32 @@ def toggleFullscreen():
         inFullscreen = True
 
 class paddingClass:
-    # 7 columns exist - left padding, character one spot, C1-2 padding, character 2 spot, C2-3 padding, character 3 spot, and right padding
+    # 9 columns exist - left padding, C-1 left padding, character one spot, C1-2 padding, character 2 spot, C2-3 padding, character 3 spot, C-3 right padding, and right padding
     # 9 rows exist - top row (padding), top dialogue box, characters 2 and 3, character 1, character-player padding, player, player-stats padding, stats/actions, and bottom padding.
     def __init__(this):
         this.top = Frame(window, bg=color.red.red, height=200, width=1000) # Top padding frame
-        this.top.grid(row=1, column=2, columnspan=5) # Columns 1 and 7 reserved for L/R paddings.
+        this.top.grid(row=1, column=2, columnspan=7) # Columns 1 and 9 reserved for L/R paddings.
 
         this.left = Frame(window, bg=color.blue.blue, height=650, width=200) # Left padding frame
         this.left.grid(row=1, rowspan=9, column=1)
 
         this.right = Frame(window, bg=color.blue.blue, height=650, width=200) # Right padding frame
-        this.right.grid(row=1, rowspan=9, column=7)
+        this.right.grid(row=1, rowspan=9, column=9)
+
+        this.chara1Left = Frame(window, bg=color.green.green, height=60, width=90)
+        this.chara1Left.grid(row=3, column=2)
 
 class dialogueBoxClass:
     def __init__(this):
-        this.parentFrame = Frame(window, bg=color.white, padx=10, pady=10)
-        this.parentFrame.grid(row=2, column=2, columnspan=5)
-        this.parentFrame.pack_propagate(0)
+        this.parentFrame = Frame(window, bg=color.white, padx=5, pady=5, height=125, width=990)
+        this.parentFrame.grid(row=2, column=2, columnspan=7)
+        this.parentFrame.grid_propagate(False)
 
-        this.textBox = Label(this.parentFrame, bg=color.black, fg=color.white, text="ExampleText", height=140, width=1000) ###### NEEDS RESIZING
+        this.textBox = Label(
+        this.parentFrame, bg=color.black, fg=color.white, width=51, height=3,
+        text="* ExampleText Example Text example, ExampleText.\n* Exampletext?\n* Exampletext exampletext.", font=("OCR A Extended", 24),
+        justify=LEFT
+        )
         this.textBox.grid(row=1, column=1)
 
 class objectsClass:
@@ -121,6 +128,7 @@ if __name__ == "__main__":
     color = colorPalette()
     object = objectsClass()
 
+    window.resizable(width=False, height=False)
     window.title("EVERSTORM")
     window.configure(bg=color.black)
     #toggleFullscreen()
