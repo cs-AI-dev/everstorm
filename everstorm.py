@@ -15,9 +15,13 @@
 from tkinter import *
 from random import randint as random
 from time import sleep as timeout
+import simpleaudio as audio
 
 window = Tk() # Initialize master window
 inFullscreen = False
+
+def getAudio(wavFile):
+    return audio.WaveObject.from_wave_file(wavFile)
 
 class redClass:
     def __init__(this):
@@ -92,17 +96,29 @@ class paddingClass:
     # 9 columns exist - left padding, C-1 left padding, character one spot, C1-2 padding, character 2 spot, C2-3 padding, character 3 spot, C-3 right padding, and right padding
     # 9 rows exist - top row (padding), top dialogue box, characters 2 and 3, character 1, character-player padding, player, player-stats padding, stats/actions, and bottom padding.
     def __init__(this):
-        this.top = Frame(window, bg=color.red.red, height=200, width=1000) # Top padding frame
+        this.top = Frame(window, bg=color.red.red, height=50, width=1000) # Top padding frame
         this.top.grid(row=1, column=2, columnspan=7) # Columns 1 and 9 reserved for L/R paddings.
 
-        this.left = Frame(window, bg=color.blue.blue, height=650, width=200) # Left padding frame
+        this.left = Frame(window, bg=color.blue.blue, height=500, width=200) # Left padding frame
         this.left.grid(row=1, rowspan=9, column=1)
 
-        this.right = Frame(window, bg=color.blue.blue, height=650, width=200) # Right padding frame
+        this.right = Frame(window, bg=color.blue.blue, height=500, width=200) # Right padding frame
         this.right.grid(row=1, rowspan=9, column=9)
 
         this.chara1Left = Frame(window, bg=color.green.green, height=60, width=90)
-        this.chara1Left.grid(row=3, column=2)
+        this.chara1Left.grid(row=3, column=2, columnspan=2)
+
+        this.chara1chara3 = Frame(window, bg=color.green.green, height=60, width=120)
+        this.chara1chara3.grid(row=3, column=5)
+
+        this.chara3Right = Frame(window, bg=color.green.green, height=60, width=90)
+        this.chara3Right.grid(row=3, column=7)
+
+        this.chara2Left = Frame(window, bg=color.green.green, height=60, width=180)
+        this.chara2Left.grid(row=4, column=2, columnspan=3)
+
+        this.chara2Right = Frame(window, bg=color.green.green, height=60, width=180)
+        this.chara2Right.grid(row=4, column=6, columnspan=3)
 
 class dialogueBoxClass:
     def __init__(this):
@@ -110,17 +126,68 @@ class dialogueBoxClass:
         this.parentFrame.grid(row=2, column=2, columnspan=7)
         this.parentFrame.grid_propagate(False)
 
+        this.textToDisplay = "* ExampleText Example Text example, ExampleText.\n* Exampletext?\n* Exampletext exampletext..."
+        this.textIncrement = 0
+
+        this.currentDisplay = StringVar()
+        this.currentDisplay.set("")
+
         this.textBox = Label(
         this.parentFrame, bg=color.black, fg=color.white, width=51, height=3,
-        text="* ExampleText Example Text example, ExampleText.\n* Exampletext?\n* Exampletext exampletext.", font=("OCR A Extended", 24),
+        textvariable=this.currentDisplay, font=("OCR A Extended", 24),
         justify=LEFT
         )
         this.textBox.grid(row=1, column=1)
+
+    def updateText(this, null=None):
+        this.textIncrement += 1
+        out = ""
+        for char in list(this.textToDisplay)[0:int(this.textIncrement)]:
+            out = out + char
+        this.setText(out)
+        lchar = list(char)[-1]
+        if lchar == ",":
+            timeout(0.2)
+        if lchar == "." or lchar == "?" or lchar == "!":
+            timeout(0.5)
+        return True
+
+    def setText(this, text):
+        this.currentDisplay.set(text)
+
+    def setNextText(this, text):
+        this.textIncrement = 0
+        this.textToDisplay = text + "          "
+
+    def say(this, text="DIALOGUE_BOX_ERROR:NO_TEXT_PROVIDED", speechbite=None):
+        this.textIncrement = 0
+        this.textToDisplay = text
+
+        printedText = ""
+        if speechbite == None:
+            for x in len(list(text)):
+                this.updateText()
+                timeout(0.05)
+
+        else:
+            for letter in list(text):
+                this.updateText()
+                speechSound = getAudio(speechbite).play()
+                speechSound.wait_done()
 
 class objectsClass:
     def __init__(this):
         this.padding = paddingClass()
         this.dialogueBox = dialogueBoxClass()
+
+        this.chara1 = Frame(window, bg=color.gold.gold, width=60, height=60)
+        this.chara1.grid(row=3, column=4)
+
+        this.chara2 = Frame(window, bg=color.gold.gold, width=60, height=60)
+        this.chara2.grid(row=4, column=5)
+
+        this.chara3 = Frame(window, bg=color.gold.gold, width=60, height=60)
+        this.chara3.grid(row=3, column=6)
 
 if __name__ == "__main__":
     print("[everstorm] compiling ...")
@@ -133,8 +200,9 @@ if __name__ == "__main__":
     window.configure(bg=color.black)
     #toggleFullscreen()
 
+    object.dialogueBox.setNextText("* ExampleText Example Text example, ExampleText.\n* Exampletext?\n* Exampletext exampletext...")
 
-
+    window.bind("<Return>", object.dialogueBox.updateText)
 
     print("[everstorm] compilation complete.")
     window.mainloop() # Run the game
