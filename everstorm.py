@@ -201,11 +201,50 @@ class playerClass:
     def __init__(this):
         this.sprite = Frame(window, bg=color.green.green, width=60, height=60)
         this.sprite.grid(row=6, column=5)
+        
+class statBarHealthClass:
+    def __init__(this):
+        this.parentFrame = Frame(window)
+        this.parentFrame.grid(row=11, column=1, columnspan=9)
+        
+        this.healthPositiveBar = Frame(this.parentFrame, width=1398, bg=color.green.green)
+        this.healthPositiveBar.grid(row=1, column=1)
+        
+        this.healthNegativeBar = Frame(this.parentFrame, width=1, bg=color.red.red)
+        this.healthNegativeBar.grid(row=1, column=2)
+        
+    def setHealthBar(healthValue):
+        if int(healthValue*14) >= 1398:
+            this.healthPositiveBar.config(width=1398)
+        else:
+            this.healthPositiveBar.config(width=(int(healthValue)*14))
+        this.healthNegativeBar.config(width=(1398-(int(healthValue)*14)))
+        
+class statBarManaClass:
+    def __init__(this):
+        this.parentFrame = Frame(window)
+        this.parentFrame.grid(row=11, column=1, columnspan=9)
+        
+        this.manaPositiveBar = Frame(this.parentFrame, width=1398, bg=color.green.green)
+        this.manaPositiveBar.grid(row=1, column=1)
+        
+        this.manaNegativeBar = Frame(this.parentFrame, width=1, bg=color.red.red)
+        this.manaNegativeBar.grid(row=1, column=2)
+        
+    def setManaBar(manaValue):
+        if int(manaValue*14) >= 1398:
+            this.manaPositiveBar.config(width=1398)
+        else:
+            this.manaPositiveBar.config(width=(int(manaValue)*14))
+        this.manaNegativeBar.config(width=(1398-(int(manaValue)*14)))
 
 class statBarClass:
     def __init__(this):
         this.label = Label(window, bg=color.grayscale.black, fg=color.grayscale.white, text="PLAYER_NAME", font=font(20))
         this.label.grid(row=10, column=1)
+        
+        this.healthBar = statBarHealthClass()
+        this.manaBar = statBarManaClass()
 
 class objectsClass:
     def __init__(this):
