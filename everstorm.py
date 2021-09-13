@@ -208,37 +208,43 @@ class playerClass:
     def __init__(this):
         this.sprite = Frame(window, bg=color.green.green, width=60, height=60)
         this.sprite.grid(row=6, column=5)
-        
+
 class statBarHealthClass:
     def __init__(this):
+        this.label = Label(window, bg=color.grayscale.black, fg=color.grayscale.white, text="Health                                                                    ", font=font(14))
+        this.label.grid(row=13, column=1, columnspan=9)
+
         this.parentFrame = Frame(window)
-        this.parentFrame.grid(row=11, column=1, columnspan=9)
-        
-        this.healthPositiveBar = Frame(this.parentFrame, width=1398, bg=color.green.green)
+        this.parentFrame.grid(row=14, column=1, columnspan=9)
+
+        this.healthPositiveBar = Frame(this.parentFrame, width=1398, bg=color.green.green, height=20)
         this.healthPositiveBar.grid(row=1, column=1)
-        
-        this.healthNegativeBar = Frame(this.parentFrame, width=1, bg=color.red.red)
+
+        this.healthNegativeBar = Frame(this.parentFrame, width=1, bg=color.red.red, height=20)
         this.healthNegativeBar.grid(row=1, column=2)
-        
-    def setHealthBar(healthValue):
+
+    def setHealthBar(this, healthValue):
         if int(healthValue*14) >= 1398:
             this.healthPositiveBar.config(width=1398)
         else:
             this.healthPositiveBar.config(width=(int(healthValue)*14))
         this.healthNegativeBar.config(width=(1398-(int(healthValue)*14)))
-        
+
 class statBarManaClass:
     def __init__(this):
+        this.label = Label(window, bg=color.grayscale.black, fg=color.grayscale.white, text="Mana                                                                      ", font=font(14))
+        this.label.grid(row=15, column=1, columnspan=9)
+
         this.parentFrame = Frame(window)
-        this.parentFrame.grid(row=11, column=1, columnspan=9)
-        
-        this.manaPositiveBar = Frame(this.parentFrame, width=1398, bg=color.green.green)
+        this.parentFrame.grid(row=16, column=1, columnspan=9)
+
+        this.manaPositiveBar = Frame(this.parentFrame, width=1398, bg=color.blue.blue, height=20)
         this.manaPositiveBar.grid(row=1, column=1)
-        
-        this.manaNegativeBar = Frame(this.parentFrame, width=1, bg=color.red.red)
+
+        this.manaNegativeBar = Frame(this.parentFrame, width=1, bg=color.red.red, height=20)
         this.manaNegativeBar.grid(row=1, column=2)
-        
-    def setManaBar(manaValue):
+
+    def setManaBar(this, manaValue):
         if int(manaValue*14) >= 1398:
             this.manaPositiveBar.config(width=1398)
         else:
@@ -250,13 +256,14 @@ class healthBarClass:
         this.parentFrame = Frame(window, bg=color.grayscale.black)
         this.parentFrame.grid(row=12, column=1, columnspan=9)
 
-        this.label = Label(this.parentFrame, bg=color.grayscale.black, fg=color.grayscale.white, text="")
+        this.label = Label(this.parentFrame, bg=color.grayscale.black, fg=color.grayscale.white, text="HEALTH")
+        this.label.grid(row=1, column=1)
 
 class statBarClass:
     def __init__(this):
         this.label = Label(window, bg=color.grayscale.black, fg=color.grayscale.white, text="PLAYER_NAME", font=font(20))
-        this.label.grid(row=10, column=1)
-        
+        this.label.grid(row=10, column=1, columnspan=9)
+
         this.healthBar = statBarHealthClass()
         this.manaBar = statBarManaClass()
 
@@ -332,6 +339,8 @@ if __name__ == "__main__":
     object.dialogueBox.setNextText("* ExampleText Example Text example, ExampleText.\n* Exampletext?\n* Exampletext exampletext...")
 
     window.bind("<Return>", object.dialogueBox.updateText)
+
+    object.statbar.healthBar.setHealthBar(50)
 
     print("[everstorm] compilation complete.")
     window.mainloop() # Run the game
