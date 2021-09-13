@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from tkinter import *
-from random import randint as random
-from time import sleep as timeout
-import simpleaudio as audio
+from PIL import Image                 # Pillow      # image processing library
+from tkinter import *                 # Tkinter     # GUI assembly API
+from random import randint as random  # random      # Random number generator
+from time import sleep as timeout     # time        # Sleeper
+import simpleaudio as audio           # simpleaudio # Audio playing library
 
 window = Tk() # Initialize master window
 inFullscreen = False
@@ -25,6 +26,9 @@ def font(size):
 
 def getAudio(wavFile):
     return audio.WaveObject.from_wave_file(wavFile)
+
+def getPillowAsset(assetName):
+    return dir + "everstorm/assets/" + assetName
 
 class redClass:
     def __init__(this):
@@ -251,13 +255,13 @@ class objectsClass:
         this.padding = paddingClass()
         this.dialogueBox = dialogueBoxClass()
 
-        this.chara1 = Frame(window, bg=color.gold.gold, width=60, height=60)
+        this.chara1 = Canvas(window, bg=color.gold.gold, width=60, height=60)
         this.chara1.grid(row=3, column=4)
 
-        this.chara2 = Frame(window, bg=color.gold.gold, width=60, height=60)
+        this.chara2 = Canvas(window, bg=color.gold.gold, width=60, height=60)
         this.chara2.grid(row=4, column=5)
 
-        this.chara3 = Frame(window, bg=color.gold.gold, width=60, height=60)
+        this.chara3 = Canvas(window, bg=color.gold.gold, width=60, height=60)
         this.chara3.grid(row=3, column=6)
 
         this.player = playerClass()
