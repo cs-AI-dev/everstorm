@@ -294,6 +294,7 @@ class playerStatsClass:
         player.mana = 50
         player.modifier = playerModifierClass()
 
+# Main loop. API fully constructed at this point. GUI assembled by `window.mainloop()`, last line of code.
 if __name__ == "__main__":
     print("[everstorm] compiling ...")
 
