@@ -142,6 +142,9 @@ class paddingClass:
         this.statsBoxBarStatsLabel = Frame(window, bg=color.grayscale.black, height=20, width=1399)
         this.statsBoxBarStatsLabel.grid(row=9, column=1, columnspan=9)
 
+        this.statbarLabelStats = Frame(window, bg=color.grayscale.black, height=20, width=1399)
+        this.statbarLabelStats.grid(row=11, column=1, columnspan=9)
+
 class dialogueBoxClass:
     def __init__(this):
         this.parentFrame = Frame(window, bg=color.white, padx=5, pady=5, height=125, width=990)
@@ -242,6 +245,13 @@ class statBarManaClass:
             this.manaPositiveBar.config(width=(int(manaValue)*14))
         this.manaNegativeBar.config(width=(1398-(int(manaValue)*14)))
 
+class healthBarClass:
+    def __init__(this):
+        this.parentFrame = Frame(window, bg=color.grayscale.black)
+        this.parentFrame.grid(row=12, column=1, columnspan=9)
+
+        this.label = Label(this.parentFrame, bg=color.grayscale.black, fg=color.grayscale.white, text="")
+
 class statBarClass:
     def __init__(this):
         this.label = Label(window, bg=color.grayscale.black, fg=color.grayscale.white, text="PLAYER_NAME", font=font(20))
@@ -249,6 +259,7 @@ class statBarClass:
         
         this.healthBar = statBarHealthClass()
         this.manaBar = statBarManaClass()
+
 
 class objectsClass:
     def __init__(this):
@@ -285,12 +296,20 @@ class playerModifierManaClass:
         mana.regenChance = 0   # Every turn you have a change to regain mana equal to this number in 100.
         mana.regenAmount = 0   # If you do regain mana by cnahce, you regain this much mana.
         mana.regenAddition = 0 # If you do regain mana in any way, it's increased by this percent.
+        mana.costReduction = 0 # Amount by which the cost of casting spells is reduced in mana.
+
+class playerModifierAttackClass:
+    def __init__(attack):
+        attackDamage = 5    # Minimum amount of damage to deal.
+        attackModifier = 10 # Adds between 0 and this to any attack.
+        criticalHitRate = 5 # Chance in 100 for damage to be doubled.
 
 class playerModifierClass:
     def __init__(modifier):
         modifier.armor = playerModifierArmorClass()
         modifier.health = playerModifierHealthClass()
         modifier.mana = playerModifierManaClass()
+        modifier.attack = playerModifierAttackClass()
 
 class playerStatsClass:
     def __init__(player):

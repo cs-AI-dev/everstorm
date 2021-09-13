@@ -1,6 +1,6 @@
 # EVERSTORM
- A choose-your-own-adventure game I designed for my computer science class.
-
+### A choose-your-own-adventure game I designed for my computer science class.
+### Version 0.1.1
 
 
 
