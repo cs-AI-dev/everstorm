@@ -12,11 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pprint import pprint             # PPrint      # Tool for DBing objects
 from PIL import Image                 # Pillow      # image processing library
 from tkinter import *                 # Tkinter     # GUI assembly API
 from random import randint as random  # random      # Random number generator
 from time import sleep as timeout     # time        # Sleeper
 import simpleaudio as audio           # simpleaudio # Audio playing library
+
+import playsound
+
 
 window = Tk() # Initialize master window
 inFullscreen = False
@@ -25,10 +29,42 @@ def font(size):
     return ("OCR A Extended", int(size))
 
 def getAudio(wavFile):
-    return audio.WaveObject.from_wave_file(wavFile)
+    playsound.playsound(wavFile)
+    #return audio.WaveObject.from_wave_file(wavFile)
 
 def getPillowAsset(assetName):
-    return dir + "everstorm/assets/" + assetName
+    return "everstorm/assets/" + assetName
+
+assetsIndicator = 1
+usedAssets = {}
+
+def getAsset(assetName):
+    print("setting globals ...", end="")
+    global assetsIndicator
+    global usedAssets
+    print("done.\nincrementing assetsIndicator ...", end="")
+    assetsIndicator += 1
+    print("done.\nadding asset to usedAssets ...", end="")
+    usedAssets[assetsIndicator] = PhotoImage(file="E:\\computer_science\\everstorm\\assets\\" + assetName + ".pgm")
+    pprint(vars(usedAssets[assetsIndicator]))
+    print("done.\nreturning value " + str(assetsIndicator) + ", equal to " + str(usedAssets[assetsIndicator]) + " ...")
+    return assetsIndicator
+
+CHARA1 = "chara1"
+c1_stored = None
+CHARA2 = "chara2"
+c2_stored = None
+CHARA3 = "chara3"
+c3_stored = None
+PLAYER = "player"
+pl_stored = None
+
+canvasStorage = {
+    CHARA1: None,
+    CHARA2: None,
+    CHARA3: None,
+    PLAYER: None,
+}
 
 class redClass:
     def __init__(this):
@@ -162,7 +198,7 @@ class dialogueBoxClass:
         textvariable=this.currentDisplay, font=font(24),
         justify=LEFT
         )
-        this.textBox.grid(row=1, column=1)
+        this.textBox.grid(row=1, column=1, columnspan=4)
 
     def updateText(this, null=None):
         this.textIncrement += 1
@@ -185,20 +221,30 @@ class dialogueBoxClass:
         this.textToDisplay = text + "          "
 
     def say(this, text="DIALOGUE_BOX_ERROR:NO_TEXT_PROVIDED", speechbite=None):
+        doSB = True
         this.textIncrement = 0
         this.textToDisplay = text
 
         printedText = ""
         if speechbite == None:
-            for x in len(list(text)):
+            for x in range(len(list(text))):
                 this.updateText()
+                this.textBox.update()
                 timeout(0.05)
 
         else:
+            doSB = True
             for letter in list(text):
                 this.updateText()
-                speechSound = getAudio(speechbite).play()
-                speechSound.wait_done()
+                if letter == "[":
+                    doSB = False
+                if doSB == True:
+                    getAudio(speechbite)
+                this.textBox.update()
+                if letter == ",":
+                    timeout(0.2)
+                if letter == ".":
+                    timeout(0.5)
 
 class playerStatsClass:
     def __init__(this):
@@ -273,13 +319,13 @@ class objectsClass:
         this.padding = paddingClass()
         this.dialogueBox = dialogueBoxClass()
 
-        this.chara1 = Canvas(window, bg=color.gold.gold, width=60, height=60)
+        this.chara1 = Frame(window, bg=color.gold.gold, width=60, height=60)
         this.chara1.grid(row=3, column=4)
 
-        this.chara2 = Canvas(window, bg=color.gold.gold, width=60, height=60)
+        this.chara2 = Frame(window, bg=color.gold.gold, width=60, height=60)
         this.chara2.grid(row=4, column=5)
 
-        this.chara3 = Canvas(window, bg=color.gold.gold, width=60, height=60)
+        this.chara3 = Frame(window, bg=color.gold.gold, width=60, height=60)
         this.chara3.grid(row=3, column=6)
 
         this.player = playerClass()
@@ -338,9 +384,107 @@ if __name__ == "__main__":
 
     object.dialogueBox.setNextText("* ExampleText Example Text example, ExampleText.\n* Exampletext?\n* Exampletext exampletext...")
 
-    window.bind("<Return>", object.dialogueBox.updateText)
+    object.statbar.healthBar.setHealthBar(90)
 
-    object.statbar.healthBar.setHealthBar(50)
+    print(" | loading levels ...")
+    object.chara1.config(bg=color.grayscale.black)
+    object.chara2.config(bg=color.grayscale.black)
+    object.chara3.config(bg=color.grayscale.black)
+    object.chara1.config(bg=color.grayscale.black)
+    blackouts = []
+
+    ssb = "E:/computer_science/everstorm/mSound.wav"
+
+    testmode = False
+
+    def secret(x):
+        object.dialogueBox.say("(What? I didn't say 'X' was an option.)")
+        timeout(0.5)
+        object.dialogueBox.say("(How did... what?)\n(Whatever. They said this might happen.)\n(CMD:py -c __main__.this.window.destroy())")
+        window.destroy()
+        print("ERROR AT 0x457A656C6F747A -> Jeez. Can't these simulos just take a hint?")
+        print("ERROR AT 0x53796D6E69 -> It's not their fault. Don't blame your weird spell wording on them.")
+        exit()
+
+    def l1_keep_going(x):
+        object.dialogueBox.say("* You continue on, and your headache fades. Good job.")
+
+    def l1_find_village(x):
+        pass
+
+    def l1_spell(x):
+        object.dialogueBox.say("* Looks like there are a couple neat\nsunlit spots nearby.", ssb)
+        timeout(0.5)
+        object.dialogueBox.say("* You can see a glade, a spot you might\nbe able to reach on a mountain,\nor just right here.", ssb)
+        timeout(1)
+        object.dialogueBox.say("[A -> FOREST GLADE]\n[W -> MOUNTAIN SPT]\n[D ->  RIGHT HERE ]")
+        window.bind("d", l2_right_here)
+        window.bind("w", l2_mountain_spot)
+        window.bind("a", l2_glade)
+
+    def l2_right_here(x):
+        object.dialogueBox.say("...")
+        timeout(0.5)
+        object.statbar.healthBar.setHealthBar(5)
+        object.statbar.manaBar.setManaBar(50)
+        object.dialogueBox.say("* OWWWWW.\n* You feel a lot closer to death now. ...", ssb)
+        l0(None)
+
+    def l2_mountain_spot(x):
+        object.dialogueBox.say("* You go and cast the spell, and ...", ssb)
+        timeout(1)
+        if random(1, 10) >= 3:
+            object.statbar.healthBar.setHealthBar(100)
+            object.dialogueBox.say("* you feel all better!\n* Looks like you'll be making it to that tavern.", ssb)
+            timeout(2)
+            window.destroy()
+            exit()
+        else:
+            object.dialogueBox.say("* ... you feel a strange disturbance.\nYou, unfortunately, aren't healed.", ssb)
+            timeout(1)
+            l0(None)
+
+    def l2_glade(x):
+        object.dialogueBox.say("* You step into the verdure-laden glade.\n* You know two spells that you could\n* use to heal yourself here.", ssb)
+        timeout(1)
+        object.dialogueBox.say("* One that you learned in the schools of magic,\n and one from your mother, who\nis a mage.", ssb)
+        timeout(1)
+        object.dialogueBox.say("[A -> SCHOOL'S SPELL]\n[D -> MOTHER'S SPELL]")
+        window.bind("a", l2_right_here)
+        window.bind("d", l2_mountain_spot)
+
+    firstTime = True
+
+    def l0(x):
+        global firstTime
+        if firstTime == True:
+            firstTime = False
+        else:
+            object.dialogueBox.say("* Back where you started.")
+            timeout(1)
+        object.dialogueBox.say("[W -> KEEP GOING]\n[A -> CAST SPELL]\n[D -> FIND VILL.]")
+        window.bind("x", secret)
+        window.bind("a", l1_spell)
+        window.bind("w", l1_keep_going)
+        window.bind("d", l1_find_village)
+
+    def runLevels(x):
+        print("[everstorm] entering levels.")
+
+        if testmode == False:
+            object.dialogueBox.say("* All of a sudden, you don't feel too well.\n* Your head is hurting. Kinda bad.", ssb)
+            timeout(1)
+            object.dialogueBox.say("* You could always try and cast a spell to\nmake yourself feel better.\n[PRESS A]", ssb)
+            timeout(1)
+            object.dialogueBox.say("* Or just keep going. Not really a huge\nproblem... probably...\n[PRESS W]", ssb)
+            timeout(1)
+            object.dialogueBox.say("* Or maybe you could find a village nearby\nthat'd be willing to treat you?\n[PRESS D]", ssb)
+            timeout(1)
+            object.dialogueBox.say("* Actually you remember there aren't any\nvillages nearby ... aww ...")
+        timeout(1)
+        l0(None)
+
+    window.bind("<Return>", runLevels)
 
     print("[everstorm] compilation complete.")
     window.mainloop() # Run the game
