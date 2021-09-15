@@ -1,4 +1,4 @@
-# EVERSTORM
+# EVERSTORM Prototype
 ### A choose-your-own-adventure game I designed for my computer science class.
 ### Version 0.1.1
 
