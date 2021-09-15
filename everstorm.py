@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+dir = "E:/computer_science/"
+
 from pprint import pprint             # PPrint      # Tool for DBing objects
 from PIL import Image                 # Pillow      # image processing library
 from tkinter import *                 # Tkinter     # GUI assembly API
@@ -393,7 +395,7 @@ if __name__ == "__main__":
     object.chara1.config(bg=color.grayscale.black)
     blackouts = []
 
-    ssb = "E:/computer_science/everstorm/mSound.wav"
+    ssb = dir + "everstorm/mSound.wav"
 
     testmode = False
 
